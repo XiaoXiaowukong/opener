@@ -2,7 +2,6 @@ __version__ = '$Id: umOpener.py 27349 2014-05-16 18:58:51Z rouault $'
 type_list = ('nc', 'grib2', 'img', 'GeoTiff')
 export_list = ('nc', 'grib2', 'img', 'GeoTiff')
 datatype_list = ('int8', 'int16', 'float32', 'float64', 'float128')
-import numpy as np
 
 
 class OpenUtils():
@@ -10,7 +9,6 @@ class OpenUtils():
         pass
 
     def initParams(self, inputFile, **kwargs):
-        print kwargs
         arguments = []
         for kwarg_key in kwargs.keys():
             arguments.append("--%s" % kwarg_key)
@@ -18,8 +16,6 @@ class OpenUtils():
         self.inputFile = inputFile
         self.optparse_init()
         (self.options, self.args) = self.parser.parse_args(args=arguments)
-        print "self.options", self.options
-
         self.openFile()
         self.process()
 
@@ -27,7 +23,6 @@ class OpenUtils():
 
     def optparse_init(self):
         """Prepare the option parser for input (argv)"""
-
         from optparse import OptionParser, OptionGroup
         usage = 'Usage: %prog [options] input_file(s) [output]'
         p = OptionParser(usage, version='%prog ' + __version__)

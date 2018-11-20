@@ -6,7 +6,6 @@ import numpy as np
 
 
 def wirte(output_file, datas, values_strs, nc_attrs, data_type):
-    print nc_attrs
     nc_dst = Dataset(output_file, 'w', format='NETCDF4')
     lat_nsize = datas[0].__len__()  # 维度的范围
     lon_nsize = datas[1].__len__()  # 经度的范围
@@ -36,7 +35,6 @@ def wirte(output_file, datas, values_strs, nc_attrs, data_type):
         nc_dst.variables[values_strs[1]][:] = datas[1]
 
         for values_str, nc_attr, data in zip(values_strs[2:], nc_attrs[2:], datas[2:]):
-            print values_str, nc_attr, data
             if "_FillValue" in nc_attr.keys():
                 miss_value = nc_attr['_FillValue']
                 var_value = nc_dst.createVariable(values_str, nctype, (y, x), fill_value=miss_value)
