@@ -20,6 +20,7 @@ class OpenUtils():
         self.nc_attrs = None
         self.optparse_init()
         (self.options, self.args) = self.parser.parse_args(args=arguments)
+        self.no_data = self.options.nodata
         self.stopped = False
         self.process()
 
@@ -88,11 +89,18 @@ class OpenUtils():
             dest='valueStrs',
             help='output every band name',
         )
+        p.add_option(
+            '-m',
+            '--miss_value',
+            dest='nodata',
+            help='export nodata',
+        )
         p.set_defaults(
             export_type='GeoTiff',
             data_type="float32",
             lat_order="asc",
-            proj="mercator"
+            proj="mercator",
+            nodata=None
         )
 
         self.parser = p
@@ -102,12 +110,18 @@ class OpenUtils():
         if (self.options.intPutType == "nc"):
             print "read nc"
             import netcdf4reader
+            print self.options.ncValues
+            print self.options.ncValues[0]
             try:
-                nc_data, nc_attrs = netcdf4reader.read(self.inputFile, self.options.ncValues, self.options.dataType)
-                self.lats = nc_data[0]
-                self.lons = nc_data[1]
+                lats, lons, nc_data, no_data, nc_attrs = netcdf4reader.read(self.inputFile, self.options.ncValues[0],
+                                                                            self.options.ncValues[1],
+                                                                            self.options.ncValues[2:],
+                                                                            self.options.dataType)
+                self.lats = lats
+                self.lons = lons
                 self.data = nc_data
                 self.nc_attrs = nc_attrs
+                self.no_data = no_data
             except Exception, e:
                 self.stop()
                 print read_file_error
@@ -131,7 +145,8 @@ class OpenUtils():
             if (self.options.exportType == "nc"):
                 print "create netcdf4"
                 import netcdf4reader
-                netcdf4reader.wirte(self.options.outFile, self.data, self.options.valueStrs, self.nc_attrs,
+                netcdf4reader.wirte(self.options.outFile, self.lats, self.lons, self.data, self.options.valueStrs,
+                                    self.nc_attrs,
                                     self.options.dataType)
             if (self.options.exportType == "GeoTiff" or self.options.exportType == "img"):
                 import geotiffreader

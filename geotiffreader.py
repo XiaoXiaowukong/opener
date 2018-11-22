@@ -30,8 +30,6 @@ def read(gtif_file, dataType):
     in_data = []
     no_data = []
     (in_lats, in_lons) = createXY(in_geotransf, cols, rows)
-    in_data.append(in_lats)
-    in_data.append(in_lons)
     for band in range(bands):  # 以下是循环遍历读取每一层数据
         currentBand = inDs.GetRasterBand(band + 1)
         current_data = currentBand.ReadAsArray(0, 0, cols, rows)
@@ -46,6 +44,7 @@ def read(gtif_file, dataType):
 
 
 def wirte(lat, lon, data, nodata, export_file, order, proj, exportType):
+    print data.shape
     if 'int8' in data.dtype.name:  # 注意！！！此处的数据类型一定要注意，如果源数据数据类型和写入法人设置不一样，致命的疏忽
         datatype = gdal.GDT_Byte
     elif 'int16' in data.dtype.name:
@@ -86,9 +85,10 @@ def wirte(lat, lon, data, nodata, export_file, order, proj, exportType):
         dataset.SetProjection(srs)  # 写入投影
     else:
         print "input srs/proj error"
+    print "nodata",nodata
     if im_bands == 1:
         dataset.GetRasterBand(1).WriteArray(data[0])  # 写入数组数据
-        if (nodata.__len__() == 0):
+        if (nodata == None or nodata.__len__() == 0):
             pass
         else:
             dataset.GetRasterBand(1).SetNoDataValue(nodata[0])  # 设置无效值
@@ -96,7 +96,7 @@ def wirte(lat, lon, data, nodata, export_file, order, proj, exportType):
     else:
         for i in range(im_bands):
             dataset.GetRasterBand(i + 1).WriteArray(data[i])
-            if (nodata.__len__() == 0):
+            if (nodata == None or nodata.__len__() == 0):
                 pass
             else:
                 dataset.GetRasterBand(1).SetNoDataValue(nodata[i])  # 设置无效值
