@@ -113,14 +113,20 @@ class OpenUtils():
             print self.options.ncValues
             print self.options.ncValues[0]
             try:
-                lats, lons, nc_data, no_data, nc_attrs = netcdf4reader.read(self.inputFile, self.options.ncValues[0],
-                                                                            self.options.ncValues[1],
-                                                                            self.options.ncValues[2:],
-                                                                            self.options.dataType)
+                lats, lons, nc_data, no_data, lat_attr, lon_attr, nc_attrs = netcdf4reader.read(self.inputFile,
+                                                                                                self.options.ncValues[
+                                                                                                    0],
+                                                                                                self.options.ncValues[
+                                                                                                    1],
+                                                                                                self.options.ncValues[
+                                                                                                2:],
+                                                                                                self.options.dataType)
                 self.lats = lats
                 self.lons = lons
                 self.data = nc_data
                 self.nc_attrs = nc_attrs
+                self.lat_attr = lat_attr
+                self.lon_attr = lon_attr
                 self.no_data = no_data
             except Exception, e:
                 self.stop()
@@ -146,7 +152,7 @@ class OpenUtils():
                 print "create netcdf4"
                 import netcdf4reader
                 netcdf4reader.wirte(self.options.outFile, self.lats, self.lons, self.data, self.options.valueStrs,
-                                    self.nc_attrs,
+                                    self.lat_attr, self.lon_attr, self.nc_attrs,
                                     self.options.dataType)
             if (self.options.exportType == "GeoTiff" or self.options.exportType == "img"):
                 import geotiffreader
