@@ -2,6 +2,9 @@ __version__ = '$Id: umOpener.py 27349 2014-05-16 18:58:51Z rouault $'
 type_list = ('nc', 'grib2', 'img', 'GeoTiff')
 export_list = ('nc', 'grib2', 'img', 'GeoTiff')
 datatype_list = ('int8', 'int16', 'float32', 'float64', 'float128')
+order = ("asc", "desc")
+proj = ("mercator",)
+read_file_error = "read file error"
 
 
 class OpenUtils():
@@ -16,7 +19,7 @@ class OpenUtils():
         self.inputFile = inputFile
         self.optparse_init()
         (self.options, self.args) = self.parser.parse_args(args=arguments)
-        self.openFile()
+        self.stopped = False
         self.process()
 
     # -------------------------------------------------------------------------
@@ -57,6 +60,22 @@ class OpenUtils():
             help='output file data type'
         )
         p.add_option(
+            '-l',
+            '--lat_order',
+            dest="latOrder",
+            type='choice',
+            choices=order,
+            help='lat list order'
+        )
+        p.add_option(
+            '-p',
+            '--proj',
+            dest="proj",
+            type='choice',
+            choices=proj,
+            help='data set proj'
+        )
+        p.add_option(
             '-n',
             '--nc_values',
             dest='ncValues',
@@ -70,7 +89,9 @@ class OpenUtils():
         )
         p.set_defaults(
             export_type='GTiff',
-            data_type="float32"
+            data_type="float32",
+            lat_order="asc",
+            proj="mercator"
         )
 
         self.parser = p
@@ -79,30 +100,50 @@ class OpenUtils():
     def openFile(self):
         if (self.options.intPutType == "nc"):
             import netcdf4reader
-            nc_data, nc_attrs = netcdf4reader.read(self.inputFile, self.options.ncValues, self.options.dataType)
-            self.lats = nc_data[0]
-            self.lons = nc_data[1]
-            self.nc_data = nc_data
-            self.nc_attrs = nc_attrs
-            # self.noData = []
-            # for value in self.options.ncValues:
-            #     if (value in nc_attrs.keys()):
-            #         if ("_FillValue" in nc_attrs[value].keys()):
-            #             self.noData.append(nc_attrs[value]["_FillValue"])
-            #         else:
-            #             self.noData.append(None)
+            try:
+                nc_data, nc_attrs = netcdf4reader.read(self.inputFile, self.options.ncValues, self.options.dataType)
+                self.lats = nc_data[0]
+                self.lons = nc_data[1]
+                self.data = nc_data
+                self.nc_attrs = nc_attrs
+            except Exception, e:
+                self.stop()
+                print read_file_error
+        if (self.options.intPutType == "GeoTiff"):
+            print "gtif"
+            import geotiffreader
+            try:
+                (in_geotransf, in_proj, in_lats, in_lons, in_data, no_data) = geotiffreader.read(self.inputFile)
+                self.lats = in_lats
+                self.lons = in_lons
+                self.data = in_data
+                self.no_data = no_data
 
-            return nc_data
+            except Exception, e:
+                self.stop()
+                print read_file_error
 
     # =================================================================================================
     def wirteNetcdfFile(self):
-        if (self.options.exportType == "nc"):
-            print "create netcdf4"
-            import netcdf4reader
-            netcdf4reader.wirte(self.options.outFile, self.nc_data, self.options.valueStrs, self.nc_attrs,
-                                self.options.dataType)
+        if (not self.stopped):
+            if (self.options.exportType == "nc"):
+                print "create netcdf4"
+                import netcdf4reader
+                netcdf4reader.wirte(self.options.outFile, self.data, self.options.valueStrs, self.nc_attrs,
+                                    self.options.dataType)
+            if (self.options.exportType == "GeoTiff"):
+                import geotiffreader
+                geotiffreader.wirte(self.lats, self.lons, self.data, self.no_data, self.options.outFile,
+                                    self.options.latOrder, self.options.proj)
+
+        else:
+            print "stop wirte file"
 
     # ==================================================================================================
+    def stop(self):
+        self.stopped = True
+
+    # ===================================================================================================
     def process(self):
-        if (self.options.exportType == "nc"):
-            self.wirteNetcdfFile()
+        self.openFile()
+        self.wirteNetcdfFile()
