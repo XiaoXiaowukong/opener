@@ -17,6 +17,7 @@ class OpenUtils():
             arguments.append("--%s" % kwarg_key)
             arguments.append(kwargs[kwarg_key])
         self.inputFile = inputFile
+        self.nc_attrs = None
         self.optparse_init()
         (self.options, self.args) = self.parser.parse_args(args=arguments)
         self.stopped = False
@@ -88,7 +89,7 @@ class OpenUtils():
             help='output every band name',
         )
         p.set_defaults(
-            export_type='GTiff',
+            export_type='GeoTiff',
             data_type="float32",
             lat_order="asc",
             proj="mercator"
@@ -99,6 +100,7 @@ class OpenUtils():
     # =================================================================================================
     def openFile(self):
         if (self.options.intPutType == "nc"):
+            print "read nc"
             import netcdf4reader
             try:
                 nc_data, nc_attrs = netcdf4reader.read(self.inputFile, self.options.ncValues, self.options.dataType)
@@ -109,16 +111,16 @@ class OpenUtils():
             except Exception, e:
                 self.stop()
                 print read_file_error
-        if (self.options.intPutType == "GeoTiff"):
-            print "gtif"
+        if (self.options.intPutType == "GeoTiff" or self.options.exportType == "img"):
+            print "read gtif"
             import geotiffreader
             try:
-                (in_geotransf, in_proj, in_lats, in_lons, in_data, no_data) = geotiffreader.read(self.inputFile)
+                (in_geotransf, in_proj, in_lats, in_lons, in_data, no_data) = geotiffreader.read(self.inputFile,
+                                                                                                 self.options.intPutType)
                 self.lats = in_lats
                 self.lons = in_lons
                 self.data = in_data
                 self.no_data = no_data
-
             except Exception, e:
                 self.stop()
                 print read_file_error
@@ -131,10 +133,10 @@ class OpenUtils():
                 import netcdf4reader
                 netcdf4reader.wirte(self.options.outFile, self.data, self.options.valueStrs, self.nc_attrs,
                                     self.options.dataType)
-            if (self.options.exportType == "GeoTiff"):
+            if (self.options.exportType == "GeoTiff" or self.options.exportType == "img"):
                 import geotiffreader
                 geotiffreader.wirte(self.lats, self.lons, self.data, self.no_data, self.options.outFile,
-                                    self.options.latOrder, self.options.proj)
+                                    self.options.latOrder, self.options.proj, self.options.exportType)
 
         else:
             print "stop wirte file"

@@ -8,11 +8,14 @@ import numpy as np
 
 # read GeoTiff and  ENVI/img
 
-def read(gtif_file):
+def read(gtif_file, dataType):
     if (not os.path.exists(gtif_file)):
         print "%s is not exist" % gtif_file
         return;
-    driver = gdal.GetDriverByName('GTiff')
+    if (dataType == "GeoTiff"):
+        driver = gdal.GetDriverByName('GTiff')
+    elif (dataType == "img"):
+        driver = gdal.GetDriverByName('ENVI')
     driver.Register()
     inDs = gdal.Open(gtif_file, GA_ReadOnly)  # 打开文件
     if inDs is None:
@@ -26,6 +29,9 @@ def read(gtif_file):
     in_proj = inDs.GetProjection()  # 地图投影信息
     in_data = []
     no_data = []
+    (in_lats, in_lons) = createXY(in_geotransf, cols, rows)
+    in_data.append(in_lats)
+    in_data.append(in_lons)
     for band in range(bands):  # 以下是循环遍历读取每一层数据
         currentBand = inDs.GetRasterBand(band + 1)
         current_data = currentBand.ReadAsArray(0, 0, cols, rows)
@@ -34,13 +40,12 @@ def read(gtif_file):
         no_data.append(current_nodata)
     print no_data
     print in_geotransf
-    (in_lats, in_lons) = createXY(in_geotransf, cols, rows)
     in_data = np.array(in_data)
     del inDs
     return (in_geotransf, in_proj, in_lats, in_lons, in_data, no_data)
 
 
-def wirte(lat, lon, data, nodata, export_file, order, proj):
+def wirte(lat, lon, data, nodata, export_file, order, proj, exportType):
     if 'int8' in data.dtype.name:  # 注意！！！此处的数据类型一定要注意，如果源数据数据类型和写入法人设置不一样，致命的疏忽
         datatype = gdal.GDT_Byte
     elif 'int16' in data.dtype.name:
@@ -50,7 +55,22 @@ def wirte(lat, lon, data, nodata, export_file, order, proj):
     else:
         datatype = gdal.GDT_Float64
     # 创建文件
-    driver = gdal.GetDriverByName("GTiff");  # 数据类型必须有，因为要计算需要多大内存空间
+    # 数据类型必须有，因为要计算需要多大内存空间
+    if (exportType == "GeoTiff"):
+        driver = gdal.GetDriverByName('GTiff')
+        if (os.path.splitext(export_file)[-1] == ".tif"):
+            pass
+        else:
+            print "export_file name error"
+            return
+    elif (exportType == "img"):
+        driver = gdal.GetDriverByName('ENVI')
+        if (os.path.splitext(export_file)[-1] == ".img"):
+            pass
+        else:
+            print "export_file name error"
+            return
+    driver.Register()
     nodata = np.asarray(nodata, dtype="double")
     # 判读数组维数
     if len(data.shape) == 3:
@@ -98,6 +118,8 @@ def createGeotransform(lat, lon, order):
 def createXY(transform, xSize, ySize):
     lat = np.linspace(transform[5] * ySize + transform[3], transform[3], ySize)
     lon = np.linspace(transform[0], transform[1] * xSize + transform[0], xSize)
+    lat = list(lat)
+    lat.reverse()
     return (lat, lon)
 
 
