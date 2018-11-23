@@ -117,7 +117,7 @@ class OpenUtils():
     # =================================================================================================
     def openFile(self):
         if (self.options.intPutType == "nc"):
-            print "read nc"
+            print "read nc "
             import netcdf4reader
             print self.options.ncValues
             print self.options.ncValues[0]
@@ -146,8 +146,9 @@ class OpenUtils():
             except Exception, e:
                 self.stop()
                 print read_file_error
-        elif (self.options.intPutType == "GeoTiff" or self.options.intPutType == "img"):
-            print "read gtif"
+        elif (self.options.intPutType == "GeoTiff" or self.options.intPutType == "img" \
+                      or self.options.intPutType == "grib2"):
+            print "read gtif /img /grib2"
             import geotiffreader
             try:
                 (in_geotransf, in_proj, in_lats, in_lons, in_data, no_data) = geotiffreader.read(self.inputFile,

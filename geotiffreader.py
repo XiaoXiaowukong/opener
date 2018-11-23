@@ -16,6 +16,8 @@ def read(gtif_file, dataType):
         driver = gdal.GetDriverByName('GTiff')
     elif (dataType == "img"):
         driver = gdal.GetDriverByName('ENVI')
+    elif (dataType == "grib2"):
+        driver = gdal.GetDriverByName('GRIB')
     driver.Register()
     inDs = gdal.Open(gtif_file, GA_ReadOnly)  # 打开文件
     if inDs is None:
@@ -39,6 +41,7 @@ def read(gtif_file, dataType):
     print no_data
     print in_geotransf
     in_data = np.array(in_data)
+    print in_data.shape
     del inDs
     return (in_geotransf, in_proj, in_lats, in_lons, in_data, no_data)
 

@@ -28,6 +28,32 @@ def nc2nc():
         proj="mercator")
 
 
+def img2img():
+    myOpenUtils = OpenUtils()
+    myOpenUtils.initParams(
+        "/Volumes/pioneer/img_hdr/FY3C_L_2016_08_29_11_28_A_G_VIRRX_L1B.img",
+        file_type="img",
+        out_file="./img2img.img",
+        export_type="img",
+        data_type='float32',
+        # lat_order="asc",
+        # data_order="desc",
+        values_strs=["lats", "lons", "img2img"],
+        nc_values=["LAT", "LON", "PAIR"],
+        proj="mercator")
+
+
+def girb2_girb2():
+    myOpenUtils = OpenUtils()
+    myOpenUtils.initParams(
+        "/Volumes/pioneer/liaoning/grb2/20180806/Z_SURF_C_BABJ_20180806001030_P_CMPA_FAST_CHN_0P05_HOR-PRE-2018080600.GRB2",
+        file_type="grib2",
+        out_file="./grib2_2_grib2.GRB2",
+        export_type="grib2",
+        data_type='float32',
+        proj="mercator")
+
+
 def nc2tif():
     myOpenUtils = OpenUtils()
     myOpenUtils.initParams(
@@ -116,19 +142,23 @@ def img2tif():
 
 
 if __name__ == '__main__':
-    tif2tif()
-    print "0-----"
-    nc2nc()
-    print "1-----"
-    nc2tif()
-    print "2-----"
-    tif2nc()
-    print "3-----"
-    nc2img()
-    print "4-----"
-    img2nc()
-    print "5----"
-    tif2img()
-    print "6----"
-    img2tif()
-    print "7----"
+    # tif2tif()
+    # print "0-----"
+    # nc2nc()
+    # print "1-----"
+    # img2img()
+    # print "8-----"
+    # nc2tif()
+    # print "2-----"
+    # tif2nc()
+    # print "3-----"
+    # nc2img()
+    # print "4-----"
+    # img2nc()
+    # print "5-----"
+    # tif2img()
+    # print "6-----"
+    # img2tif()
+    # print "7-----"
+    girb2_girb2()
+    print "8-----"
