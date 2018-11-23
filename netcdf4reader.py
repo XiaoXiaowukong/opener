@@ -40,6 +40,7 @@ def wirte(output_file, lats, lons, datas, values_strs, lat_attrs, lon_attrs, nc_
         nc_dst.variables[values_strs[1]][:] = lons
         # =================================================================================================
         if (nc_attrs != None):
+            print "===="
             for values_str, nc_attr, data in zip(values_strs[2:], nc_attrs, datas):
                 if nc_attrs != None and "_FillValue" in nc_attr.keys():
                     miss_value = nc_attr['_FillValue']
@@ -53,9 +54,11 @@ def wirte(output_file, lats, lons, datas, values_strs, lat_attrs, lon_attrs, nc_
                     print "value attr error"
                 nc_dst.variables[values_str][:] = data
         else:
+            print "----"
             for values_str, data in zip(values_strs[2:], datas):
                 var_value = nc_dst.createVariable(values_str, nctype, (y, x))
                 nc_dst.variables[values_str][:] = data
+    nc_dst.close()
     del nc_dst
 
 
@@ -96,6 +99,7 @@ def read(input_file, latkey, lonkey, values, dataType):
             print "%s value error " % value
             sys.exit()
     nc_data = np.array(nc_data)
+    nc_ds.close()
     del nc_ds
     return lats, lons, nc_data, no_data, lat_attr, lon_attr, nc_attrs
 

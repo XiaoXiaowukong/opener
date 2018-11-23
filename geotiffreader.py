@@ -85,7 +85,7 @@ def wirte(lat, lon, data, nodata, export_file, order, proj, exportType):
         dataset.SetProjection(srs)  # 写入投影
     else:
         print "input srs/proj error"
-    print "nodata",nodata
+    print "nodata", nodata
     if im_bands == 1:
         dataset.GetRasterBand(1).WriteArray(data[0])  # 写入数组数据
         if (nodata == None or nodata.__len__() == 0):

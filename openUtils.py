@@ -141,6 +141,9 @@ class OpenUtils():
                 self.lons = in_lons
                 self.data = in_data
                 self.no_data = no_data
+                self.nc_attrs = None
+                self.lat_attr = None
+                self.lon_attr = None
             except Exception, e:
                 self.stop()
                 print read_file_error
