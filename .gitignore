@@ -4,3 +4,5 @@
 *.tif
 *.img
 *.dat
+*.hdr
+*.xml

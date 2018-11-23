@@ -5,6 +5,7 @@ datatype_list = ('int8', 'int16', 'float32', 'float64', 'float128')
 order = ("asc", "desc")
 proj = ("mercator",)
 read_file_error = "read file error"
+import numpy as np
 
 
 class OpenUtils():
@@ -70,6 +71,13 @@ class OpenUtils():
             help='lat list order'
         )
         p.add_option(
+            '--data_order',
+            dest="dataOrder",
+            type='choice',
+            choices=order,
+            help='data list order'
+        )
+        p.add_option(
             '-p',
             '--proj',
             dest="proj",
@@ -96,9 +104,10 @@ class OpenUtils():
             help='export nodata',
         )
         p.set_defaults(
-            export_type='GeoTiff',
-            data_type="float32",
-            lat_order="asc",
+            exportType='GeoTiff',
+            dataType="float32",
+            latOrder="asc",
+            dataOrder="asc",
             proj="mercator",
             nodata=None
         )
@@ -123,7 +132,13 @@ class OpenUtils():
                                                                                                 self.options.dataType)
                 self.lats = lats
                 self.lons = lons
-                self.data = nc_data
+                if (self.options.dataOrder == "asc"):
+                    self.data = nc_data
+                else:
+                    reverse_data = []
+                    for index in range(nc_data.shape[0]):
+                        reverse_data.append(nc_data[0][::-1])
+                    self.data = np.array(reverse_data)
                 self.nc_attrs = nc_attrs
                 self.lat_attr = lat_attr
                 self.lon_attr = lon_attr
@@ -131,7 +146,7 @@ class OpenUtils():
             except Exception, e:
                 self.stop()
                 print read_file_error
-        if (self.options.intPutType == "GeoTiff" or self.options.exportType == "img"):
+        elif (self.options.intPutType == "GeoTiff" or self.options.intPutType == "img"):
             print "read gtif"
             import geotiffreader
             try:
@@ -139,7 +154,13 @@ class OpenUtils():
                                                                                                  self.options.intPutType)
                 self.lats = in_lats
                 self.lons = in_lons
-                self.data = in_data
+                if (self.options.dataOrder == "asc"):
+                    self.data = in_data
+                else:
+                    reverse_data = []
+                    for index in range(in_data.shape[0]):
+                        reverse_data.append(in_data[0][::-1])
+                    self.data = np.array(reverse_data)
                 self.no_data = no_data
                 self.nc_attrs = None
                 self.lat_attr = None
@@ -159,6 +180,7 @@ class OpenUtils():
                                     self.options.dataType)
             if (self.options.exportType == "GeoTiff" or self.options.exportType == "img"):
                 import geotiffreader
+                print "self.options.latOrder", self.options.latOrder
                 geotiffreader.wirte(self.lats, self.lons, self.data, self.no_data, self.options.outFile,
                                     self.options.latOrder, self.options.proj, self.options.exportType)
 

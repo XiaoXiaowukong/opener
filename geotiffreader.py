@@ -96,19 +96,21 @@ def wirte(lat, lon, data, nodata, export_file, order, proj, exportType):
     else:
         for i in range(im_bands):
             dataset.GetRasterBand(i + 1).WriteArray(data[i])
-            if (nodata == None or nodata.__len__() == 0):
+            if (nodata.__len__() == 0):
                 pass
             else:
-                dataset.GetRasterBand(1).SetNoDataValue(nodata[i])  # 设置无效值
+                if (nodata[i] != None):
+                    dataset.GetRasterBand(1).SetNoDataValue(nodata[i])  # 设置无效值
     del dataset
 
 
 def createGeotransform(lat, lon, order):
+    print "order", order
     if (order == "asc"):  # 顺序
         local_transform = (
             min(lon), (max(lon) - min(lon)) / lon.__len__(), 0.0, max(lat), 0.0,
             (min(lat) - max(lat)) / lat.__len__())  # 第二个0.0是读取数据的顺序如果为0.0就按照数据原始行顺序读取，如果为 - 0.0就是按照行逆序读取。
-    else:  # 倒序
+    elif (order == "desc"):  # 倒序
         local_transform = (
             min(lon), (max(lon) - min(lon)) / lon.__len__(), 0.0, min(lat), -0.0,
             abs((min(lat) - max(lat)) / lat.__len__()))  # 第二个0.0是读取数据的顺序如果为0.0就按照数据原始行顺序读取，如果为 - 0.0就是按照行逆序读取。
