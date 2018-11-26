@@ -146,8 +146,7 @@ class OpenUtils():
             except Exception, e:
                 self.stop()
                 print read_file_error
-        elif (self.options.intPutType == "GeoTiff" or self.options.intPutType == "img" \
-                      or self.options.intPutType == "grib2"):
+        elif (self.options.intPutType == "GeoTiff" or self.options.intPutType == "img"):
             print "read gtif /img /grib2"
             import geotiffreader
             try:
@@ -169,9 +168,29 @@ class OpenUtils():
             except Exception, e:
                 self.stop()
                 print read_file_error
+        elif (self.options.intPutType == "grib2"):
+            import grib2reader
+            try:
+                (in_geotransf, in_proj, in_lats, in_lons, in_data, no_data) = grib2reader.read(self.inputFile)
+                self.lats = in_lats
+                self.lons = in_lons
+                if (self.options.dataOrder == "asc"):
+                    self.data = in_data
+                else:
+                    reverse_data = []
+                    for index in range(in_data.shape[0]):
+                        reverse_data.append(in_data[0][::-1])
+                    self.data = np.array(reverse_data)
+                self.no_data = no_data
+                self.nc_attrs = None
+                self.lat_attr = None
+                self.lon_attr = None
+            except Exception, e:
+                self.stop()
+                print read_file_error
 
     # =================================================================================================
-    def wirteNetcdfFile(self):
+    def wirteFile(self):
         if (not self.stopped):
             if (self.options.exportType == "nc"):
                 print "create netcdf4"
@@ -184,6 +203,11 @@ class OpenUtils():
                 print "self.options.latOrder", self.options.latOrder
                 geotiffreader.wirte(self.lats, self.lons, self.data, self.no_data, self.options.outFile,
                                     self.options.latOrder, self.options.proj, self.options.exportType)
+            if (self.options.exportType == "grib2"):
+                print "create grb2 error"
+                # import grib2reader
+                # grib2reader.wirte(self.lats, self.lons, self.data, self.no_data, self.options.outFile,
+                #                   self.options.latOrder, self.options.proj, self.options.exportType)
 
         else:
             print "stop wirte file"
@@ -195,4 +219,4 @@ class OpenUtils():
     # ===================================================================================================
     def process(self):
         self.openFile()
-        self.wirteNetcdfFile()
+        self.wirteFile()

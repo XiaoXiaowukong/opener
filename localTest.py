@@ -47,8 +47,9 @@ def girb2_girb2():
     myOpenUtils = OpenUtils()
     myOpenUtils.initParams(
         "/Volumes/pioneer/liaoning/grb2/20180806/Z_SURF_C_BABJ_20180806001030_P_CMPA_FAST_CHN_0P05_HOR-PRE-2018080600.GRB2",
+        # "./utm.grb2",
         file_type="grib2",
-        out_file="./grib2_2_grib2.GRB2",
+        out_file="./grib2_2_grib2.grb2",
         export_type="grib2",
         data_type='float32',
         proj="mercator")

@@ -15,7 +15,7 @@ def read(gtif_file, dataType):
     if (dataType == "GeoTiff"):
         driver = gdal.GetDriverByName('GTiff')
     elif (dataType == "img"):
-        driver = gdal.GetDriverByName('ENVI')
+        driver = gdal.GetDriverByName('HFA')
     elif (dataType == "grib2"):
         driver = gdal.GetDriverByName('GRIB')
     driver.Register()
@@ -42,6 +42,7 @@ def read(gtif_file, dataType):
     print in_geotransf
     in_data = np.array(in_data)
     print in_data.shape
+    print in_data
     del inDs
     return (in_geotransf, in_proj, in_lats, in_lons, in_data, no_data)
 
@@ -66,8 +67,15 @@ def wirte(lat, lon, data, nodata, export_file, order, proj, exportType):
             print "export_file name error"
             return
     elif (exportType == "img"):
-        driver = gdal.GetDriverByName('ENVI')
+        driver = gdal.GetDriverByName('HFA')
         if (os.path.splitext(export_file)[-1] == ".img"):
+            pass
+        else:
+            print "export_file name error"
+            return
+    elif (exportType == "grib2"):
+        driver = gdal.GetDriverByName('GRIB')
+        if (os.path.splitext(export_file)[-1] == ".GRB2"):
             pass
         else:
             print "export_file name error"
