@@ -9,7 +9,6 @@ def read(currentGrb2File):
     driver = gdal.GetDriverByName('GRIB')
     driver.Register()
     dataset = gdal.Open(currentGrb2File, gdal.GA_ReadOnly)
-    print dataset
     x_size = dataset.RasterXSize
     y_size = dataset.RasterYSize
     geotrans = dataset.GetGeoTransform()  # 仿射矩阵
@@ -26,7 +25,6 @@ def read(currentGrb2File):
         no_data.append(current_nodata)
     in_data = np.array(in_data)
     del dataset
-    gdal.Translate('./utm.grb', currentGrb2File, format='GS7BG',)
     return (geotrans, proj, in_lats, in_lons, in_data, no_data)
 
 

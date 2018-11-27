@@ -103,12 +103,19 @@ class OpenUtils():
             dest='nodata',
             help='export nodata',
         )
+        p.add_option(
+            '-r',
+            '--is_rewirte_data',
+            dest="isReWirteData",
+            help='return data'
+        )
         p.set_defaults(
             exportType='GeoTiff',
             dataType="float32",
             latOrder="asc",
             dataOrder="asc",
             proj="mercator",
+            isReWirteData=False,
             nodata=None
         )
 
@@ -147,7 +154,7 @@ class OpenUtils():
                 self.stop()
                 print read_file_error
         elif (self.options.intPutType == "GeoTiff" or self.options.intPutType == "img"):
-            print "read gtif /img /grib2"
+            print "read gtif/img"
             import geotiffreader
             try:
                 (in_geotransf, in_proj, in_lats, in_lons, in_data, no_data) = geotiffreader.read(self.inputFile,
@@ -169,6 +176,7 @@ class OpenUtils():
                 self.stop()
                 print read_file_error
         elif (self.options.intPutType == "grib2"):
+            print "read grib/grib2"
             import grib2reader
             try:
                 (in_geotransf, in_proj, in_lats, in_lons, in_data, no_data) = grib2reader.read(self.inputFile)
@@ -219,4 +227,5 @@ class OpenUtils():
     # ===================================================================================================
     def process(self):
         self.openFile()
-        self.wirteFile()
+        if (self.options.isReWirteData):
+            self.wirteFile()

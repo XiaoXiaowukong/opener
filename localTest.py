@@ -12,9 +12,10 @@ def tif2tif():
         lat_order="asc",
         values_strs=["lats", "lons", "abc"],
         nc_values=["LAT", "LON", "PAIR"],
+        is_rewirte_data=False,
         proj="mercator")
 
-
+    print myOpenUtils.lats
 def nc2nc():
     myOpenUtils = OpenUtils()
     myOpenUtils.initParams(
@@ -143,8 +144,8 @@ def img2tif():
 
 
 if __name__ == '__main__':
-    # tif2tif()
-    # print "0-----"
+    tif2tif()
+    print "0-----"
     # nc2nc()
     # print "1-----"
     # img2img()
@@ -161,5 +162,5 @@ if __name__ == '__main__':
     # print "6-----"
     # img2tif()
     # print "7-----"
-    girb2_girb2()
-    print "8-----"
+    # girb2_girb2()
+    # print "8-----"

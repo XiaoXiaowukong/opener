@@ -14,7 +14,6 @@ def wirte(output_file, lats, lons, datas, values_strs, lat_attrs, lon_attrs, nc_
     nc_dst.createDimension(y, lat_nsize);
     nc_dst.createDimension(x, lon_nsize);
     nctype = switType(data_type)
-    print datas.shape
     if (datas.__len__() == values_strs[2:].__len__()):
         if nc_attrs != None and "_FillValue" in lat_attrs.keys():
             y_miss_value = nc_attrs[0]["_FillValue"]
@@ -41,7 +40,6 @@ def wirte(output_file, lats, lons, datas, values_strs, lat_attrs, lon_attrs, nc_
         nc_dst.variables[values_strs[1]][:] = lons
         # =================================================================================================
         if (nc_attrs != None):
-            print "===="
             for values_str, nc_attr, data in zip(values_strs[2:], nc_attrs, datas):
                 if nc_attrs != None and "_FillValue" in nc_attr.keys():
                     miss_value = nc_attr['_FillValue']
@@ -55,7 +53,6 @@ def wirte(output_file, lats, lons, datas, values_strs, lat_attrs, lon_attrs, nc_
                     print "value attr error"
                 nc_dst.variables[values_str][:] = data
         else:
-            print "----"
             for values_str, data in zip(values_strs[2:], datas):
                 var_value = nc_dst.createVariable(values_str, nctype, (y, x))
                 nc_dst.variables[values_str][:] = data

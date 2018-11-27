@@ -38,11 +38,7 @@ def read(gtif_file, dataType):
         current_nodata = currentBand.GetNoDataValue()
         in_data.append(current_data)
         no_data.append(current_nodata)
-    print no_data
-    print in_geotransf
     in_data = np.array(in_data)
-    print in_data.shape
-    print in_data
     del inDs
     return (in_geotransf, in_proj, in_lats, in_lons, in_data, no_data)
 
