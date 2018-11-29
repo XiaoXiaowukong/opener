@@ -16,6 +16,8 @@ def tif2tif():
         proj="mercator")
 
     print myOpenUtils.lats
+
+
 def nc2nc():
     myOpenUtils = OpenUtils()
     myOpenUtils.initParams(
@@ -59,13 +61,14 @@ def girb2_girb2():
 def nc2tif():
     myOpenUtils = OpenUtils()
     myOpenUtils.initParams(
-        "/Volumes/pioneer/gdal_Demo/cldas_/Z_NAFP_C_BABJ_20180701091809_P_CLDAS_RT_ASI_0P0625_HOR-PRS-2018070109.nc",
+        "/Volumes/pioneer/gdal_Demo/cldas_/NAFP_CLDAS2.0_RT_GRB_WIV10_20181128-18.nc",
         file_type="nc",
-        out_file="./nc2tif.tif",
+        out_file="/Volumes/pioneer/gdal_Demo/cldas_/NAFP_CLDAS2.0_RT_GRB_WIV10_20181128-18.tif",
         export_type="GeoTiff",
         data_type='float32',
+        is_rewirte_data=True,
         values_strs=["lats", "lons", "abc"],
-        nc_values=["LAT", "LON", "PAIR"],
+        nc_values=["LAT", "LON", "WIV10"],
         proj="mercator")
 
 
@@ -144,14 +147,14 @@ def img2tif():
 
 
 if __name__ == '__main__':
-    tif2tif()
-    print "0-----"
+    # tif2tif()
+    # print "0-----"
     # nc2nc()
     # print "1-----"
     # img2img()
     # print "8-----"
-    # nc2tif()
-    # print "2-----"
+    nc2tif()
+    print "2-----"
     # tif2nc()
     # print "3-----"
     # nc2img()
