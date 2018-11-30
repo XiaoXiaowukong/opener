@@ -34,7 +34,7 @@ myOpenUtils = OpenUtils()
         nc_values="LAT,LON,WIV10",
         proj="mercator")
 ```
-===========================
+
 ##外部调用说明(参数名（key）和参数（value）要用空格隔开)
 * 输入文件（没有参数名）
 * 1.--file_type：输入文件格式（'nc', 'grib2', 'img', 'GeoTiff'）如果输入为nc 必须要有nc_values参数
