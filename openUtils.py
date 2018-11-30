@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 __version__ = '$Id: umOpener.py 27349 2014-05-16 18:58:51Z rouault $'
 type_list = ('nc', 'grib2', 'img', 'GeoTiff')
 export_list = ('nc', 'grib2', 'img', 'GeoTiff')
@@ -6,6 +7,8 @@ order = ("asc", "desc")
 proj = ("mercator",)
 read_file_error = "read file error"
 import numpy as np
+import sys
+import time
 
 
 class OpenUtils():
@@ -21,9 +24,27 @@ class OpenUtils():
         self.nc_attrs = None
         self.optparse_init()
         (self.options, self.args) = self.parser.parse_args(args=arguments)
+        if (self.options.exportType == "nc"):
+            self.options.valueStrs = self.options.valueStrs.split(",")
+        if (self.options.intPutType == "nc"):
+            self.options.ncValues = self.options.ncValues.split(",")
         self.no_data = self.options.nodata
         self.stopped = False
         self.process()
+
+    # 外部调用接口
+    def outsideParams(self, arguments):
+        inputFile = arguments[0]
+        self.inputFile = inputFile
+        self.nc_attrs = None
+        self.optparse_init()
+        (self.options, self.args) = self.parser.parse_args(args=arguments)
+        if (self.options.exportType == "nc"):
+            self.options.valueStrs = self.options.valueStrs.split(",")
+        if (self.options.intPutType == "nc"):
+            self.options.ncValues = self.options.ncValues.split(",")
+        self.no_data = self.options.nodata
+        self.stopped = False
 
     # -------------------------------------------------------------------------
 
@@ -115,7 +136,7 @@ class OpenUtils():
             latOrder="asc",
             dataOrder="asc",
             proj="mercator",
-            isReWirteData=False,
+            isReWirteData="False",
             nodata=None
         )
 
@@ -127,7 +148,6 @@ class OpenUtils():
             print "read nc "
             import netcdf4reader
             print self.options.ncValues
-            print self.options.ncValues[0]
             try:
                 lats, lons, nc_data, no_data, lat_attr, lon_attr, nc_attrs = netcdf4reader.read(self.inputFile,
                                                                                                 self.options.ncValues[
@@ -227,5 +247,15 @@ class OpenUtils():
     # ===================================================================================================
     def process(self):
         self.openFile()
-        if (self.options.isReWirteData):
+        if (self.options.isReWirteData == "True"):
             self.wirteFile()
+
+
+if __name__ == '__main__':
+    startTime = time.time()
+    argv = sys.argv
+    if argv:
+        myOpenUtils = OpenUtils()
+        myOpenUtils.outsideParams(argv[1:])
+        myOpenUtils.process()
+    print "end time ", time.time() - startTime

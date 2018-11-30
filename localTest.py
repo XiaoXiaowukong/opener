@@ -41,8 +41,8 @@ def img2img():
         data_type='float32',
         # lat_order="asc",
         # data_order="desc",
-        values_strs=["lats", "lons", "img2img"],
-        nc_values=["LAT", "LON", "PAIR"],
+        values_strs="lats,lons,img2img",
+        nc_values="LAT,LON, PAIR",
         proj="mercator")
 
 
@@ -66,9 +66,9 @@ def nc2tif():
         out_file="/Volumes/pioneer/gdal_Demo/cldas_/NAFP_CLDAS2.0_RT_GRB_WIV10_20181128-18.tif",
         export_type="GeoTiff",
         data_type='float32',
-        is_rewirte_data=True,
-        values_strs=["lats", "lons", "abc"],
-        nc_values=["LAT", "LON", "WIV10"],
+        is_rewirte_data="True",
+        values_strs="lats,lons,abc",
+        nc_values="LAT,LON,WIV10",
         proj="mercator")
 
 
