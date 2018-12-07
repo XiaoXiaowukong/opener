@@ -129,6 +129,7 @@ def createXY(transform, xSize, ySize):
     lon = np.linspace(transform[0], transform[1] * xSize + transform[0], xSize)
     lat = list(lat)
     lat.reverse()
+    lat = np.asarray(lat)
     return (lat, lon)
 
 
