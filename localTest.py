@@ -1,4 +1,7 @@
+# -*- coding:utf-8 -*-
 from openUtils import OpenUtils
+import os
+import matplotlib.pyplot as plt
 
 
 def tif2tif():
@@ -146,24 +149,75 @@ def img2tif():
         proj="mercator")
 
 
+def makeSmtif():
+    smdir = "/Volumes/pioneer/gdal_Demo/cldas_nrt_day/2018/12"
+    smtifdir = "/Volumes/pioneer/gdal_Demo/cldas_nrt_day/2018/12_tif"
+    smdir = "/Volumes/pioneer/gdal_Demo/cldas_nrt_5day/2018"
+    smtifdir = "/Volumes/pioneer/gdal_Demo/cldas_nrt_5day/2018_tif"
+    rsmdir = "/Volumes/pioneer/gdal_Demo/cldas_nrt_day/2018/12/avg"
+    rsmtifdir = "/Volumes/pioneer/gdal_Demo/cldas_nrt_day/2018/12/avg_tif"
+    dirlist = os.listdir(rsmdir)
+    myOpenUtils = OpenUtils()
+    for smFile in dirlist:
+        input_file = "%s/%s" % (rsmdir, smFile)
+        print input_file
+        out_file = "%s/%s.tif" % (rsmtifdir, os.path.splitext(smFile)[0])
+        myOpenUtils.initParams(
+            input_file,
+            file_type="nc",
+            out_file=out_file,
+            export_type="GeoTiff",
+            data_type='float',
+            is_rewirte_data="True",
+            nc_values="LAT,LON,RSM",
+            lat_order="desc",
+            proj="mercator")
+
+
+def readFY4():
+    myOpenUtils = OpenUtils()
+    input_file = "/Volumes/pioneer/风云4/FY4A-_AGRI--_N_REGC_1047E_L1-_FDI-_MULT_NOM_20181202042334_20181202042750_4000M_V0001.img"
+    myOpenUtils.initParams(
+        input_file,
+        file_type="img",
+        out_file="./FY4A.img",
+        export_type="img",
+        data_type='float32',
+        is_rewirte_data="True",
+        data_order="desc",
+        proj="mercator"
+    )
+    print myOpenUtils.data.shape
+    data = myOpenUtils.data[0]
+    import numpy as np
+    print np.max(data)
+    print np.nanmean(data)
+    print np.nanmax(data)
+    print np.nanmin(data)
+    plt.imshow(data)
+    plt.show()
+
+
 if __name__ == '__main__':
-    # tif2tif()
-    # print "0-----"
-    # nc2nc()
-    # print "1-----"
-    # img2img()
-    # print "8-----"
-    nc2tif()
-    print "2-----"
-    # tif2nc()
-    # print "3-----"
-    # nc2img()
-    # print "4-----"
-    # img2nc()
-    # print "5-----"
-    # tif2img()
-    # print "6-----"
-    # img2tif()
-    # print "7-----"
-    # girb2_girb2()
-    # print "8-----"
+    # makeSmtif()
+    readFY4()
+# tif2tif()
+# print "0-----"
+# nc2nc()
+# print "1-----"
+# img2img()
+# print "8-----"
+# nc2tif()
+# print "2-----"
+# tif2nc()
+# print "3-----"
+# nc2img()
+# print "4-----"
+# img2nc()
+# print "5-----"
+# tif2img()
+# print "6-----"
+# img2tif()
+# print "7-----"
+# girb2_girb2()
+# print "8-----"

@@ -2,7 +2,7 @@
 __version__ = '$Id: umOpener.py 27349 2014-05-16 18:58:51Z rouault $'
 type_list = ('nc', 'grib2', 'img', 'GeoTiff')
 export_list = ('nc', 'grib2', 'img', 'GeoTiff')
-datatype_list = ('int8', 'int16', 'float16', 'float32', 'float64', 'float128')
+datatype_list = ('int8', 'int16', 'float', 'float16', 'float32', 'float64', 'float128')
 order = ("asc", "desc")
 proj = ("mercator",)
 read_file_error = "read file error"
