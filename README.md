@@ -18,6 +18,7 @@
 * values_strs ：输出NC格式要素(前两个必须为 维度 经度) 示例："lats,lons,abc"（如果输出数据格式为nc 此参数必传）
 * nc_values ：输入NC格式要提取的要素（前两个必须为 维度 经度）示例："LAT,LON,PAIR"（如果输入数据格式为nc 此参数必传）
 * is_rewirte_data：是否去写出数据（True/False）默认False
+* data_order :数据顺序（默认asc）
 * proj:投影方式（mercator）默认mercator
 
 ## 示例
@@ -48,6 +49,7 @@ myOpenUtils = OpenUtils()
 * --values_strs ：输出NC格式要素(前两个必须为 维度 经度) 示例："lats,lons,abc"（如果输出数据格式为nc 此参数必传）
 * --nc_values ：输入NC格式要提取的要素（前两个必须为 维度 经度）示例："LAT,LON,PAIR"（如果输入数据格式为nc 此参数必传）
 * --is_rewirte_data：是否去写出数据（True/False）默认False
+* --data_order :数据顺序（默认asc）
 * --proj:投影方式（mercator）默认mercator
 
 ## 外部调用示例
