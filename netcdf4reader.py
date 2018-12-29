@@ -3,9 +3,10 @@ from netCDF4 import Dataset
 import os
 import sys
 import numpy as np
+import evalUtils
 
 
-def wirte(output_file, lats, lons, datas, values_strs, lat_attrs, lon_attrs, nc_attrs, data_type):
+def wirte(output_file, lats, lons, datas, values_strs, lat_attrs, lon_attrs, nc_attrs, data_type, evalStr):
     nc_dst = Dataset(output_file, 'w', format='NETCDF4')
     lat_nsize = lats.__len__()  # 维度的范围
     lon_nsize = lons.__len__()  # 经度的范围
@@ -24,6 +25,7 @@ def wirte(output_file, lats, lons, datas, values_strs, lat_attrs, lon_attrs, nc_
         try:
             var_value.setncatts(lat_attrs)
         except Exception, e:
+            print e.message, "lat_attrs=", lat_attrs
             print "lat attr error"
         nc_dst.variables[values_strs[0]][:] = lats
         # ================================================================================================
@@ -36,6 +38,7 @@ def wirte(output_file, lats, lons, datas, values_strs, lat_attrs, lon_attrs, nc_
         try:
             var_value.setncatts(lon_attrs)
         except Exception, e:
+            print e.message, "lon_attrs=", lon_attrs
             print "lon attr error"
         nc_dst.variables[values_strs[1]][:] = lons
         # =================================================================================================
@@ -51,10 +54,14 @@ def wirte(output_file, lats, lons, datas, values_strs, lat_attrs, lon_attrs, nc_
                     var_value.setncatts(nc_attr)
                 except Exception, e:
                     print "value attr error"
+                if (evalStr != None):
+                    data = evalUtils.simpleEval(data, evalStr)
                 nc_dst.variables[values_str][:] = data
         else:
             for values_str, data in zip(values_strs[2:], datas):
                 var_value = nc_dst.createVariable(values_str, nctype, (y, x))
+                if (evalStr != None):
+                    data = evalUtils.simpleEval(data, evalStr)
                 nc_dst.variables[values_str][:] = data
     else:
         print "data is %s" % datas.__len__() + "and values_strs is %s" % values_strs[2:].__len__()

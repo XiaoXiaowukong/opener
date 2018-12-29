@@ -130,6 +130,11 @@ class OpenUtils():
             dest="isReWirteData",
             help='return data'
         )
+        p.add_option(
+            '--eval_str',
+            dest="evalStr",
+            help="data operational formula"
+        )
         p.set_defaults(
             exportType='GeoTiff',
             dataType="float32",
@@ -137,7 +142,8 @@ class OpenUtils():
             dataOrder="asc",
             proj="mercator",
             isReWirteData="False",
-            nodata=None
+            nodata=None,
+            evalStr=None
         )
 
         self.parser = p
@@ -225,12 +231,13 @@ class OpenUtils():
                 import netcdf4reader
                 netcdf4reader.wirte(self.options.outFile, self.lats, self.lons, self.data, self.options.valueStrs,
                                     self.lat_attr, self.lon_attr, self.nc_attrs,
-                                    self.options.dataType)
+                                    self.options.dataType, self.options.evalStr)
             if (self.options.exportType == "GeoTiff" or self.options.exportType == "img"):
                 import geotiffreader
                 print "self.options.latOrder", self.options.latOrder
                 geotiffreader.wirte(self.lats, self.lons, self.data, self.no_data, self.options.outFile,
-                                    self.options.latOrder, self.options.proj, self.options.exportType)
+                                    self.options.latOrder, self.options.proj, self.options.exportType,
+                                    self.options.evalStr)
             if (self.options.exportType == "grib2"):
                 print "create grb2 error"
                 # import grib2reader

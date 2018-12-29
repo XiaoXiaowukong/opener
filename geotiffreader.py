@@ -4,6 +4,7 @@ from osgeo import osr
 from osgeo.gdalconst import *
 import os
 import numpy as np
+import evalUtils
 
 
 # read GeoTiff and  ENVI/img
@@ -43,7 +44,7 @@ def read(gtif_file, dataType):
     return (in_geotransf, in_proj, in_lats, in_lons, in_data, no_data)
 
 
-def wirte(lat, lon, data, nodata, export_file, order, proj, exportType):
+def wirte(lat, lon, data, nodata, export_file, order, proj, exportType, evalStr):
     print data.shape
     if 'int8' in data.dtype.name:  # 注意！！！此处的数据类型一定要注意，如果源数据数据类型和写入法人设置不一样，致命的疏忽
         datatype = gdal.GDT_Byte
@@ -94,15 +95,23 @@ def wirte(lat, lon, data, nodata, export_file, order, proj, exportType):
         print "input srs/proj error"
     print "nodata", nodata
     if im_bands == 1:
-        dataset.GetRasterBand(1).WriteArray(data[0])  # 写入数组数据
+        evalData = data[0]
+        if (evalStr != None):
+            evalData = evalUtils.simpleEval(evalData, evalStr)
+        dataset.GetRasterBand(1).WriteArray(evalData)  # 写入数组数据
         if (nodata == None or nodata.__len__() == 0):
             pass
         else:
+
             dataset.GetRasterBand(1).SetNoDataValue(nodata[0])  # 设置无效值
 
     else:
         for i in range(im_bands):
-            dataset.GetRasterBand(i + 1).WriteArray(data[i])
+            evalData = data[i]
+            if (evalStr != None):
+                evalData = data[i]
+                evalData = evalUtils.simpleEval(evalData, evalStr)
+            dataset.GetRasterBand(i + 1).WriteArray(evalData)
             if (nodata.__len__() == 0):
                 pass
             else:
