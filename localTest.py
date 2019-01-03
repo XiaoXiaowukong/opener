@@ -200,6 +200,20 @@ def readFY4():
     plt.show()
 
 
+def nc2imgPlus():
+    myOpenUtils = OpenUtils()
+    myOpenUtils.initParams(
+        "/Volumes/pioneer/gdal_Demo_内蒙三维数据/wrfout_4km/2018/20181115/wrfout_SMOIS000010_t00Z_F000.nc",
+        file_type="nc_p",
+        out_file="/Volumes/pioneer/gdal_Demo_内蒙三维数据/wrfout_4km/2018/20181115/wrfout_SMOIS000010_t00Z_F000_1.nc",
+        export_type="nc",
+        data_type='float32',
+        is_rewirte_data="True",
+        values_strs="lats,lons,abc",
+        nc_values="XLAT,XLONG,SMOIS",
+        proj="mercator")
+
+
 if __name__ == '__main__':
     # makeSmtif()
     # readFY4()
@@ -207,19 +221,22 @@ if __name__ == '__main__':
     # print "0-----"
     # nc2nc()
     # print "1-----"
-# img2img()
-# print "8-----"
-# nc2tif()
-# print "2-----"
-# tif2nc()
-# print "3-----"
-    nc2img()
-    print "4-----"
-    img2nc()
-    print "5-----"
-# tif2img()
-# print "6-----"
-# img2tif()
-# print "7-----"
-# girb2_girb2()
-# print "8-----"
+    # img2img()
+    # print "8-----"
+    # nc2tif()
+    # print "2-----"
+    # tif2nc()
+    # print "3-----"
+    #     nc2img()
+    #     print "4-----"
+    #     img2nc()
+    #     print "5-----"
+
+    # tif2img()
+    # print "6-----"
+    # img2tif()
+    # print "7-----"
+    # girb2_girb2()
+    # print "8-----"
+    nc2imgPlus()
+    print "9----"

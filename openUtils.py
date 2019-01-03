@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 __version__ = '$Id: umOpener.py 27349 2014-05-16 18:58:51Z rouault $'
-type_list = ('nc', 'grib2', 'img', 'GeoTiff')
+type_list = ('nc', 'nc_p', 'grib2', 'img', 'GeoTiff')
 export_list = ('nc', 'grib2', 'img', 'GeoTiff')
 datatype_list = ('int8', 'int16', 'float', 'float16', 'float32', 'float64', 'float128')
 order = ("asc", "desc")
@@ -26,7 +26,7 @@ class OpenUtils():
         (self.options, self.args) = self.parser.parse_args(args=arguments)
         if (self.options.exportType == "nc"):
             self.options.valueStrs = self.options.valueStrs.split(",")
-        if (self.options.intPutType == "nc"):
+        if (self.options.intPutType == "nc" or self.options.intPutType == "nc_p" ):
             self.options.ncValues = self.options.ncValues.split(",")
         self.no_data = self.options.nodata
         self.stopped = False
@@ -179,6 +179,32 @@ class OpenUtils():
             except Exception, e:
                 self.stop()
                 print read_file_error
+        elif (self.options.intPutType == "nc_p"):
+            print "read nc—p "
+            import netcdf4reader
+            lats, lons, nc_data, no_data, lat_attr, lon_attr, nc_attrs = netcdf4reader.readP(self.inputFile,
+                                                                                            self.options.ncValues[
+                                                                                                0],
+                                                                                            self.options.ncValues[
+                                                                                                1],
+                                                                                            self.options.ncValues[
+                                                                                            2:],
+                                                                                            self.options.dataType)
+            self.lats = lats
+            self.lons = lons
+            if (self.options.dataOrder == "asc"):
+                self.data = nc_data
+            else:
+                reverse_data = []
+                for index in range(nc_data.shape[0]):
+                    reverse_data.append(nc_data[0][::-1])
+                self.data = np.array(reverse_data)
+            self.nc_attrs = nc_attrs
+            self.lat_attr = lat_attr
+            self.lon_attr = lon_attr
+            self.no_data = no_data
+
+
         elif (self.options.intPutType == "GeoTiff" or self.options.intPutType == "img"):
             print "read gtif/img"
             import geotiffreader

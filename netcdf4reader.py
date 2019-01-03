@@ -4,6 +4,9 @@ import os
 import sys
 import numpy as np
 import evalUtils
+from gdaltools.gdalGridTools import GdalGridTools
+import geotiffreader
+import time
 
 
 def wirte(output_file, lats, lons, datas, values_strs, lat_attrs, lon_attrs, nc_attrs, data_type, evalStr):
@@ -109,6 +112,74 @@ def read(input_file, latkey, lonkey, values, dataType):
     nc_ds.close()
     del nc_ds
     return lats, lons, nc_data, no_data, lat_attr, lon_attr, nc_attrs
+
+
+# ===================================================================
+def readP(input_file, latkey, lonkey, values, dataType):
+    startTime = time.time()
+    if (os.path.exists(input_file)):
+        nc_ds = Dataset(input_file)
+    else:
+        print "%s is not exist" % input_file
+        sys.exit()
+    nc_data = []
+    nc_data_p = []
+    no_data = []
+    nc_attrs = []
+    lats = []
+    lons = []
+    lat_attr = {}
+    lon_attr = {}
+    print latkey, lonkey, values, dataType
+    lats = nc_ds.variables[latkey][:]
+    for attr in nc_ds.variables[latkey].ncattrs():
+        lat_attr[attr] = getattr(nc_ds.variables[latkey], attr)
+    lons = nc_ds.variables[lonkey][:]
+    for attr in nc_ds.variables[lonkey].ncattrs():
+        lon_attr[attr] = getattr(nc_ds.variables[lonkey], attr)
+    for value in values:
+        if value in nc_ds.variables.keys():
+            data = nc_ds.variables[value][:]
+            print len(data.shape)
+            if (len(data.shape) == 3):
+                data = data[0]
+            elif (len(data.shape) == 4):
+                data = data[0][0]
+            data = np.array(data, dtype=dataType)
+            attrs = {}
+            for attr in nc_ds.variables[value].ncattrs():
+                attrs[attr] = getattr(nc_ds.variables[value], attr)
+                if (attr == "_FillValue"):
+                    no_data.append(attrs[attr])
+            nc_attrs.append(attrs)
+            nc_data.append(data)
+        else:
+            print "%s value error " % value
+            sys.exit()
+
+    print nc_data
+    x_size = lats.shape[2]
+    y_size = lats.shape[1]
+    print x_size
+    print y_size
+    # 插值
+    myGdalGridTools = GdalGridTools()
+    myGdalGridTools.initParams(lats, lons, nc_data)
+    grid_data = myGdalGridTools.grid_data
+    # ---------------------
+    cols = grid_data.RasterXSize  # 获取文件的列数
+    rows = grid_data.RasterYSize  # 获取文件的行数
+    bands = grid_data.RasterCount  # 获取文件纵向深度（几个通道）
+    grid_geotransf = grid_data.GetGeoTransform()  # 获取放射矩阵
+    print grid_geotransf
+    for band in range(bands):  # 以下是循环遍历读取每一层数据
+        currentBand = grid_data.GetRasterBand(band + 1)
+        current_data = currentBand.ReadAsArray(0, 0, cols, rows)
+        nc_data_p.append(current_data)
+        print current_data.shape
+    (lats_p, lons_p) = geotiffreader.createXY(grid_geotransf, x_size, y_size)
+    print "gdal_grid time", time.time() - startTime
+    return lats_p, lons_p, nc_data_p, no_data, lat_attr, lon_attr, nc_attrs
 
 
 def switType(data_type):
