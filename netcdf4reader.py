@@ -178,6 +178,7 @@ def readP(input_file, latkey, lonkey, values, dataType):
         nc_data_p.append(current_data)
         print current_data.shape
     (lats_p, lons_p) = geotiffreader.createXY(grid_geotransf, x_size, y_size)
+    del grid_data
     print "gdal_grid time", time.time() - startTime
     return lats_p, lons_p, nc_data_p, no_data, lat_attr, lon_attr, nc_attrs
 
