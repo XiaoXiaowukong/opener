@@ -10,9 +10,9 @@
 
 ## 使用说明：(带*号为必传参数)
 * ***输入文件**（没有参数名）
-* ***file_type**：输入文件格式（'nc', 'grib2', 'img', 'GeoTiff'）如果输入为nc 必须要有nc_values参数
+* ***file_type**：输入文件格式（'nc', 'grib2', 'img', 'GeoTiff'）如果输入为nc 必须要有nc_values参数 注意！！！ nc_p格式是为wrfout数据定制的处理方式
 * ***out_file** ：输出文件地址
-* ***export_type** ：输出文件格式（'nc', 'grib2', 'img', 'GeoTiff'）如果输出为nc 必须要有values_strs参数
+* ***export_type** ：输出文件格式（'nc', 'nc_p','grib2', 'img', 'GeoTiff'）如果输出为nc 必须要有values_strs参数
 * data_type ：输出数据类型('int8', 'int16','float', 'float32', 'float64', 'float128')(默认'float32')
 * is_rewirte_data：是否去写出数据（True/False）默认False
 * eval_str :对数据进行计算 例（"data/100"）
@@ -44,7 +44,7 @@ myOpenUtils = OpenUtils()
 
 ## 外部调用说明((带*号为必传参数) 参数名（key）和参数（value）要用空格隔开)
 * ***输入文件**（没有参数名）
-* ***--file_type**：输入文件格式（'nc', 'grib2', 'img', 'GeoTiff'）如果输入为nc 必须要有nc_values参数
+* ***--file_type**：输入文件格式（'nc','nc_p', 'grib2', 'img', 'GeoTiff'）如果输入为nc 必须要有nc_values参数 注意！！！ nc_p格式是为wrfout数据定制的处理方式
 * ***--out_file** ：输出文件地址
 * ***--export_type** ：输出文件格式（'nc', 'grib2', 'img', 'GeoTiff'）如果输出为nc 必须要有values_strs参数
 * --data_type：输出数据类型('int8', 'int16','float','float32', 'float64', 'float128')(默认'float32')
