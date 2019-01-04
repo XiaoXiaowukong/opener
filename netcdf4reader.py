@@ -166,7 +166,7 @@ def readP(input_file, latkey, lonkey, values, dataType):
     myGdalGridTools = GdalGridTools()
     myGdalGridTools.initParams(lats, lons, nc_data)
     grid_data = myGdalGridTools.grid_data
-    # ---------------------
+    # --------------------------------------------------
     cols = grid_data.RasterXSize  # 获取文件的列数
     rows = grid_data.RasterYSize  # 获取文件的行数
     bands = grid_data.RasterCount  # 获取文件纵向深度（几个通道）
@@ -175,11 +175,13 @@ def readP(input_file, latkey, lonkey, values, dataType):
     for band in range(bands):  # 以下是循环遍历读取每一层数据
         currentBand = grid_data.GetRasterBand(band + 1)
         current_data = currentBand.ReadAsArray(0, 0, cols, rows)
+        # current_data[current_data < -0.0001] = 0.0
         nc_data_p.append(current_data)
         print current_data.shape
     (lats_p, lons_p) = geotiffreader.createXY(grid_geotransf, x_size, y_size)
     del grid_data
     print "gdal_grid time", time.time() - startTime
+    nc_data_p = np.array(nc_data_p)
     return lats_p, lons_p, nc_data_p, no_data, lat_attr, lon_attr, nc_attrs
 
 

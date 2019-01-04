@@ -73,9 +73,9 @@ class GdalGridTools():
         grid_data = gdal.Grid('', polygon.ExportToJson(), \
                               width=self.pCols, height=self.pRows, outputType=gdal.GDT_Float32, outputSRS='EPSG:4326',
                               outputBounds=[self.lon0, self.lat0, self.lon1, self.lat1], noData=0.0, \
-                              # format='GTiff', algorithm='invdist')
-                              format='MEM', algorithm='nearest')
-        # format='GTiff', algorithm='invdistnn')
+                              # format='MEM', algorithm='invdist')
+                              # format='MEM', algorithm='nearest')
+                              format='MEM', algorithm='invdistnn')
         # format='GTiff', algorithm='linear')
 
         self.grid_data = grid_data

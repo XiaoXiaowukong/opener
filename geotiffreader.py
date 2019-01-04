@@ -102,9 +102,7 @@ def wirte(lat, lon, data, nodata, export_file, order, proj, exportType, evalStr)
         if (nodata == None or nodata.__len__() == 0):
             pass
         else:
-
             dataset.GetRasterBand(1).SetNoDataValue(nodata[0])  # 设置无效值
-
     else:
         for i in range(im_bands):
             evalData = data[i]

@@ -205,9 +205,11 @@ def nc2imgPlus():
     myOpenUtils.initParams(
         "/Volumes/pioneer/gdal_Demo_内蒙三维数据/wrfout_4km/2018/20181115/wrfout_SMOIS000010_t00Z_F000.nc",
         file_type="nc_p",
-        out_file="/Volumes/pioneer/gdal_Demo_内蒙三维数据/wrfout_4km/2018/20181115/wrfout_SMOIS000010_t00Z_F000_1.nc",
-        export_type="nc",
+        out_file="/Volumes/pioneer/gdal_Demo_内蒙三维数据/wrfout_4km/2018/20181115/wrfout_SMOIS000010_t00Z_F000_1.img",
+        export_type="img",
         data_type='float32',
+        data_order="desc",
+        miss_value="0",
         is_rewirte_data="True",
         values_strs="lats,lons,abc",
         nc_values="XLAT,XLONG,SMOIS",

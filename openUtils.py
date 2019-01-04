@@ -26,9 +26,9 @@ class OpenUtils():
         (self.options, self.args) = self.parser.parse_args(args=arguments)
         if (self.options.exportType == "nc"):
             self.options.valueStrs = self.options.valueStrs.split(",")
-        if (self.options.intPutType == "nc" or self.options.intPutType == "nc_p" ):
+        if (self.options.intPutType == "nc" or self.options.intPutType == "nc_p"):
             self.options.ncValues = self.options.ncValues.split(",")
-        self.no_data = self.options.nodata
+        self.no_data = self.options.nodata.split(",")
         self.stopped = False
         self.process()
 
@@ -43,7 +43,7 @@ class OpenUtils():
             self.options.valueStrs = self.options.valueStrs.split(",")
         if (self.options.intPutType == "nc"):
             self.options.ncValues = self.options.ncValues.split(",")
-        self.no_data = self.options.nodata
+        self.no_data = self.options.nodata.split(",")
         self.stopped = False
 
     # -------------------------------------------------------------------------
@@ -183,13 +183,13 @@ class OpenUtils():
             print "read nc—p "
             import netcdf4reader
             lats, lons, nc_data, no_data, lat_attr, lon_attr, nc_attrs = netcdf4reader.readP(self.inputFile,
-                                                                                            self.options.ncValues[
-                                                                                                0],
-                                                                                            self.options.ncValues[
-                                                                                                1],
-                                                                                            self.options.ncValues[
-                                                                                            2:],
-                                                                                            self.options.dataType)
+                                                                                             self.options.ncValues[
+                                                                                                 0],
+                                                                                             self.options.ncValues[
+                                                                                                 1],
+                                                                                             self.options.ncValues[
+                                                                                             2:],
+                                                                                             self.options.dataType)
             self.lats = lats
             self.lons = lons
             if (self.options.dataOrder == "asc"):
@@ -202,7 +202,8 @@ class OpenUtils():
             self.nc_attrs = nc_attrs
             self.lat_attr = lat_attr
             self.lon_attr = lon_attr
-            self.no_data = no_data
+            if (self.no_data == None):
+                self.no_data = no_data
 
 
         elif (self.options.intPutType == "GeoTiff" or self.options.intPutType == "img"):
