@@ -66,14 +66,16 @@ def girb2_girb2():
 def nc2tif():
     myOpenUtils = OpenUtils()
     myOpenUtils.initParams(
-        "/Volumes/pioneer/gdal_Demo/cldas_/NAFP_CLDAS2.0_RT_GRB_WIV10_20181128-18.nc",
+        # "/Volumes/pioneer/gdal_Demo/cldas_/NAFP_CLDAS2.0_RT_GRB_WIV10_20181128-18.nc",
+        "/Volumes/pioneer/gdal_Demo_内蒙三维数据/Z_NAFP_C_BABJ_20181129002105_P_CLDAS_RT_ASI_0P0625_HOR-GST-2018112823.nc",
         file_type="nc",
-        out_file="/Volumes/pioneer/gdal_Demo/cldas_/NAFP_CLDAS2.0_RT_GRB_WIV10_20181128-18.tif",
+        # out_file="/Volumes/pioneer/gdal_Demo/cldas_/NAFP_CLDAS2.0_RT_GRB_WIV10_20181128-18.tif",
+        out_file="/Volumes/pioneer/gdal_Demo_内蒙三维数据/Z_NAFP_C_BABJ_20181129002105_P_CLDAS_RT_ASI_0P0625_HOR-GST-2018112823.tif",
         export_type="GeoTiff",
         data_type='float32',
         is_rewirte_data="True",
         values_strs="lats,lons,abc",
-        nc_values="LAT,LON,WIV10",
+        nc_values="LAT,LON,TG",
         proj="mercator")
 
 
@@ -216,6 +218,22 @@ def nc2imgPlus():
         proj="mercator")
 
 
+def makeBaseDatat():
+    dir = "/Volumes/pioneer/gdal_Demo_内蒙三维数据/cmcast/cldas_nrt/2018/12/20181201/Z_NAFP_C_BABJ_20181203000812_P_CLDAS_NRT_CHN_0P0625_HOR-RSM000010-2018120100.nc"
+    exportFile = "/Volumes/pioneer/gdal_Demo_内蒙三维数据/cmcast/cldas_nrt_tif/2018/12/20181201/Z_NAFP_C_BABJ_20181203000812_P_CLDAS_NRT_CHN_0P0625_HOR-RSM000010-2018120100.tif"
+    myOpenUtils = OpenUtils()
+    myOpenUtils.initParams(
+        dir,
+        file_type="nc",
+        out_file=exportFile,
+        export_type="GeoTiff",
+        data_type='float64',
+        data_order="desc",
+        is_rewirte_data="True",
+        nc_values="LAT,LON,RSM",
+        proj="mercator")
+
+
 if __name__ == '__main__':
     # makeSmtif()
     # readFY4()
@@ -240,5 +258,7 @@ if __name__ == '__main__':
     # print "7-----"
     # girb2_girb2()
     # print "8-----"
-    nc2imgPlus()
-    print "9----"
+    # nc2imgPlus()
+    # print "9----"
+    makeBaseDatat()
+    print "10---"

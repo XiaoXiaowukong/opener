@@ -28,7 +28,8 @@ class OpenUtils():
             self.options.valueStrs = self.options.valueStrs.split(",")
         if (self.options.intPutType == "nc" or self.options.intPutType == "nc_p"):
             self.options.ncValues = self.options.ncValues.split(",")
-        self.no_data = self.options.nodata.split(",")
+        if (self.options.nodata != None):
+            self.no_data = self.options.nodata.split(",")
         self.stopped = False
         self.process()
 
@@ -43,7 +44,8 @@ class OpenUtils():
             self.options.valueStrs = self.options.valueStrs.split(",")
         if (self.options.intPutType == "nc"):
             self.options.ncValues = self.options.ncValues.split(",")
-        self.no_data = self.options.nodata.split(",")
+        if (self.options.nodata != None):
+            self.no_data = self.options.nodata.split(",")
         self.stopped = False
 
     # -------------------------------------------------------------------------

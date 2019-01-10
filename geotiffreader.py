@@ -95,7 +95,7 @@ def wirte(lat, lon, data, nodata, export_file, order, proj, exportType, evalStr)
         print "input srs/proj error"
     print "nodata", nodata
     if im_bands == 1:
-        evalData = data[0]
+        evalData = data
         if (evalStr != None):
             evalData = evalUtils.simpleEval(evalData, evalStr)
         dataset.GetRasterBand(1).WriteArray(evalData)  # 写入数组数据

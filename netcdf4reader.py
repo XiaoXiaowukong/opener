@@ -97,6 +97,7 @@ def read(input_file, latkey, lonkey, values, dataType):
     for value in values:
         if value in nc_ds.variables.keys():
             data = nc_ds.variables[value][:]
+            print "=====", data.dtype.name
             data = np.array(data, dtype=dataType)
             attrs = {}
             for attr in nc_ds.variables[value].ncattrs():
@@ -110,7 +111,11 @@ def read(input_file, latkey, lonkey, values, dataType):
             sys.exit()
     nc_data = np.array(nc_data)
     nc_ds.close()
+
     del nc_ds
+    print "original", np.nanmin(nc_data)
+    print "original", np.nanmax(nc_data)
+
     return lats, lons, nc_data, no_data, lat_attr, lon_attr, nc_attrs
 
 
