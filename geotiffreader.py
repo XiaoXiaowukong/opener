@@ -78,7 +78,8 @@ def wirte(lat, lon, data, nodata, export_file, order, proj, exportType, evalStr)
             print "export_file name error"
             return
     driver.Register()
-    nodata = np.asarray(nodata, dtype="double")
+    if (nodata != None):
+        nodata = np.asarray(nodata, dtype="double")
     # 判读数组维数
     if len(data.shape) == 3:
         im_bands, im_height, im_width = data.shape
@@ -99,10 +100,9 @@ def wirte(lat, lon, data, nodata, export_file, order, proj, exportType, evalStr)
         if (evalStr != None):
             evalData = evalUtils.simpleEval(evalData, evalStr)
         dataset.GetRasterBand(1).WriteArray(evalData)  # 写入数组数据
-        if (nodata == None or nodata.__len__() == 0):
-            pass
-        else:
-            dataset.GetRasterBand(1).SetNoDataValue(nodata[0])  # 设置无效值
+        if (nodata != None):
+            if (nodata.__len__() != 0):
+                dataset.GetRasterBand(1).SetNoDataValue(nodata[0])  # 设置无效值
     else:
         for i in range(im_bands):
             evalData = data[i]
@@ -110,11 +110,10 @@ def wirte(lat, lon, data, nodata, export_file, order, proj, exportType, evalStr)
                 evalData = data[i]
                 evalData = evalUtils.simpleEval(evalData, evalStr)
             dataset.GetRasterBand(i + 1).WriteArray(evalData)
-            if (nodata.__len__() == 0):
-                pass
-            else:
-                if (nodata[i] != None):
-                    dataset.GetRasterBand(1).SetNoDataValue(nodata[i])  # 设置无效值
+            if (nodata != None):
+                if (nodata.__len__() != 0):
+                    if (nodata[i] != None):
+                        dataset.GetRasterBand(1).SetNoDataValue(nodata[i])  # 设置无效值
     del dataset
 
 
