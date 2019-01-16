@@ -81,7 +81,8 @@ def wirte(lat, lon, data, nodata, export_file, order, proj, exportType, evalStr)
     if (nodata != None):
         nodata = np.asarray(nodata, dtype="double")
     # 判读数组维数
-    if len(data.shape) == 3:
+    dims = len(data.shape)
+    if dims == 3:
         im_bands, im_height, im_width = data.shape
     else:
         im_bands, (im_height, im_width) = 1, data.shape
@@ -96,7 +97,10 @@ def wirte(lat, lon, data, nodata, export_file, order, proj, exportType, evalStr)
         print "input srs/proj error"
     print "nodata", nodata
     if im_bands == 1:
-        evalData = data
+        if(dims==3):
+            evalData = data[0]
+        else:
+            evalData = data
         if (evalStr != None):
             evalData = evalUtils.simpleEval(evalData, evalStr)
         dataset.GetRasterBand(1).WriteArray(evalData)  # 写入数组数据

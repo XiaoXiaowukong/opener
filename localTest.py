@@ -154,27 +154,30 @@ def img2tif():
 
 
 def makeSmtif():
-    smdir = "/Volumes/pioneer/gdal_Demo/cldas_nrt_day/2018/12"
-    smtifdir = "/Volumes/pioneer/gdal_Demo/cldas_nrt_day/2018/12_tif"
-    smdir = "/Volumes/pioneer/gdal_Demo/cldas_nrt_5day/2018"
-    smtifdir = "/Volumes/pioneer/gdal_Demo/cldas_nrt_5day/2018_tif"
-    rsmdir = "/Volumes/pioneer/gdal_Demo/cldas_nrt_day/2018/12/avg"
-    rsmtifdir = "/Volumes/pioneer/gdal_Demo/cldas_nrt_day/2018/12/avg_tif"
-    dirlist = os.listdir(rsmdir)
+    # smdir = "/Volumes/pioneer/gdal_Demo/cldas_nrt_day/2018/12"
+    # smtifdir = "/Volumes/pioneer/gdal_Demo/cldas_nrt_day/2018/12_tif"
+    # smdir = "/Volumes/pioneer/gdal_Demo/cldas_nrt_5day/2018"
+    # smtifdir = "/Volumes/pioneer/gdal_Demo/cldas_nrt_5day/2018_tif"
+    # rsmdir = "/Volumes/pioneer/gdal_Demo/cldas_nrt_day/2018/12/avg"
+    # rsmtifdir = "/Volumes/pioneer/gdal_Demo/cldas_nrt_day/2018/12/avg_tif"
+    predir = "/Volumes/pioneer/gdal_Demo_内蒙三维数据/cmcast/cldas_nrt/2019/01/20190101"
+    pretifdir="/Volumes/pioneer/gdal_Demo_内蒙三维数据/cmcast/cldas_nrt/2019/01/20190101_tif"
+    dirlist = os.listdir(predir)
     myOpenUtils = OpenUtils()
     for smFile in dirlist:
-        input_file = "%s/%s" % (rsmdir, smFile)
+        input_file = "%s/%s" % (predir, smFile)
         print input_file
-        out_file = "%s/%s.tif" % (rsmtifdir, os.path.splitext(smFile)[0])
+        out_file = "%s/%s.tif" % (pretifdir, os.path.splitext(smFile)[0])
         myOpenUtils.initParams(
             input_file,
             file_type="nc",
             out_file=out_file,
             export_type="GeoTiff",
-            data_type='float',
+            # data_type='float',
             is_rewirte_data="True",
-            nc_values="LAT,LON,RSM",
-            lat_order="desc",
+            nc_values="LAT,LON,PRCP",
+            data_order="desc",
+            # lat_order="desc",
             proj="mercator")
 
 
@@ -235,7 +238,7 @@ def makeBaseDatat():
 
 
 if __name__ == '__main__':
-    # makeSmtif()
+    makeSmtif()
     # readFY4()
     # tif2tif()
     # print "0-----"
@@ -260,5 +263,5 @@ if __name__ == '__main__':
     # print "8-----"
     # nc2imgPlus()
     # print "9----"
-    makeBaseDatat()
-    print "10---"
+    # makeBaseDatat()
+    # print "10---"
