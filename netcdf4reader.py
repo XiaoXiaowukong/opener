@@ -108,7 +108,6 @@ def read(input_file, latkey, lonkey, values, dataType):
             nc_data.append(data)
         else:
             print "%s value error " % value
-            sys.exit()
     nc_data = np.array(nc_data)
     nc_ds.close()
 

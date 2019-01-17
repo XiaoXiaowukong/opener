@@ -162,6 +162,9 @@ def makeSmtif():
     # rsmtifdir = "/Volumes/pioneer/gdal_Demo/cldas_nrt_day/2018/12/avg_tif"
     predir = "/Volumes/pioneer/gdal_Demo_内蒙三维数据/cmcast/cldas_nrt/2019/01/20190101"
     pretifdir="/Volumes/pioneer/gdal_Demo_内蒙三维数据/cmcast/cldas_nrt/2019/01/20190101_tif"
+
+    predir = "/Volumes/pioneer/gdal_Demo_内蒙三维数据/cmcast/cldas_nrt/2018/12/20181201"
+    pretifdir="/Volumes/pioneer/gdal_Demo_内蒙三维数据/cmcast/cldas_nrt/2018/12/20181201_tif"
     dirlist = os.listdir(predir)
     myOpenUtils = OpenUtils()
     for smFile in dirlist:
@@ -175,7 +178,7 @@ def makeSmtif():
             export_type="GeoTiff",
             # data_type='float',
             is_rewirte_data="True",
-            nc_values="LAT,LON,PRCP",
+            nc_values="LAT,LON,RSM",
             data_order="desc",
             # lat_order="desc",
             proj="mercator")
